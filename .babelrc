@@ -1,9 +1,16 @@
 {
   "presets": [
-    ["@babel/env", {
-      "targets": {
-        "ie": "11"
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "ie": "11"
+        }
       }
-    }]
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-object-rest-spread"
   ]
 }
