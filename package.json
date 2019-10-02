@@ -1,6 +1,6 @@
 {
   "name": "jest-puppeteer-utils",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "license": "MIT",
   "description": "Jest-puppeteer aux utils",
   "repository": "github:yyynnn/jest-puppeteer-utils",
