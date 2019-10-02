@@ -1,12 +1,22 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 const createNativeFn = (fn) => async (element) =>
   element.executionContext().evaluate(fn, element);
+
+/**
+ * Extracts text from element
+ *
+ * @param {function} page puppeteer page entity
+ * @returns
+ */
 
 export const getInnerText = createNativeFn(
   (nativeElement) => nativeElement.innerText,
 );
 
 /**
- * waits for network action with matching string and method
+ * Waits for network action with matching string and method
  *
  * @param {*} page puppeteer page entity
  * @param {string} [url='']
@@ -85,7 +95,7 @@ export const go = async (url) => {
 };
 
 /**
- *
+ * Types into provided element a string and waits for network
  *
  * @param {string} searchString
  * @param {object} searchElement

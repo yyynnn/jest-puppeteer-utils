@@ -1,10 +1,142 @@
 # Jest-puppeteer-utils
 
-# Гайд по jest+puppeteer+jest-puppeteer. Кровь и пот
+## Гайд по jest+puppeteer+jest-puppeteer. Кровь и пот
 
-### Введение. Docs:
+### Docs:
 
-Для удобства я собрал библиотечку с необходимыми методами:
+```js
+import {
+  go,
+  typeInto,
+  clickElement,
+  search,
+  waitForNetworkAction,
+  hoverElement,
+  getInnerText,
+} from 'jest-puppeteer-utils';
+```
+
+#### `go(url)`
+
+```js
+go(
+  url: string
+): page: object
+```
+
+Creates new page, disables cache, then navigates to provied url
+
+Example:
+
+```js
+const page = await go('SOME_URL');
+```
+
+#### `getInnerText(elem)`
+
+```js
+getInnerText(
+  element: object
+): string
+```
+
+Extracts text from element
+
+Example:
+
+```js
+const renderedItemInnerText = await getInnerText(renderedItem);
+```
+
+#### `waitForNetworkAction(page, url, method)`
+
+```js
+waitForNetworkAction(
+  page: object,
+  url: string,
+  method: string
+): { data: object, ok: string, response: Promise }
+```
+
+Waits for network action with matching string and method
+
+Example:
+
+```js
+const { ok } = await waitForNetworkAction(page, 'SOME_API', 'DELETE');
+```
+
+#### `clickElement(selector, page)`
+
+```js
+clickElement(
+  selector: string,
+  page: object
+): elem: object
+```
+
+Waits for provided element by selector then clicks on it
+
+Example:
+
+```js
+await clickElement('#SOME_ELEMENT', page);
+```
+
+#### `hoverElement(selector, page)`
+
+```js
+hoverElement(
+  selector: string,
+  page: object
+): elem: object
+```
+
+Waits for provided element by selector then hovers on it
+
+Example:
+
+```js
+await hoverElement('#SOME_ELEMENT', page);
+```
+
+#### `typeInto(selector, text, page)`
+
+```js
+typeInto(
+  selector: string,
+  text: string,
+  page: object
+): elem: object
+```
+
+Waits for provided element by selector then types into that element. Deletes
+present value if found
+
+Example:
+
+```js
+await typeInto('#SOME_SHIT', 'SOME_TEXT_TO_TYPE', page);
+```
+
+#### `search(searchString, searchElement, url, page)`
+
+```js
+typeInto(
+  searchString,
+  searchElement,
+  url,
+  page
+): respose: Promise
+```
+
+Types into provided element a string and waits for network
+
+Example:
+
+```js
+await search('SOME_TEXT_TO_TYPE', '#SEARCH_INPUT', SOME_API, page);
+```
 
 ### Проблемные кейсы
 
@@ -12,11 +144,28 @@
 
 По-умолчанию кэш хранится между запусками в headless режиме - ты просто не
 сможешь отловить реквесты/респонсы при повторном запуске теста. Спускай кэш при
-создании страниц (этот узд включен в функцию `go` библиотеки):
+создании страниц (этот уже включен в функцию `go` библиотеки):
 
 ```javascript
 const page = await browser.newPage()
 await page.setCacheEnabled(false) 👏
+```
+
+или в каждом тесте
+
+```javascript
+describe((‘test session for some page’, () => {
+  beforeAll(async () => {
+    browser = await puppeteer.launch(common.getDebugSettings());
+    const context = await browser.createIncognitoBrowserContext();
+    await context.newPage();
+    await common.login();
+  }
+
+  beforeEach(async () => {
+    await page.setCacheEnabled(false)
+  }
+}
 ```
 
 #### Кейс #2: Отлов после перехода
